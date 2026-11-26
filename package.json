@@ -1,0 +1,10 @@
+{
+  "name": "infinitunnel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Grimoire — roguelite de combat tour par tour en ASCII",
+  "scripts": {
+    "dev": "node tools/serve.js",
+    "data": "node tools/csv-to-js.js"
+  }
+}

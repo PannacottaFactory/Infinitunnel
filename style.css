@@ -285,3 +285,12 @@ body.flash-record #crt { animation: record-flash 1.4s ease-out; }
 .new-record { color: var(--gold); margin: 4px 0; animation: blink .4s steps(2) 6; }
 #death-grimoire { margin: 10px 0; }
 #death-log { background: var(--bg); padding: 6px 1ch; max-height: 50vh; overflow-y: auto; white-space: pre; margin-top: 10px; }
+
+/* --- Étape 4 : statuts supplémentaires ------------------------------------ */
+:root { --combustible: #ffb347; --frostbite: #9fefff; --exposure: #ffcf8a; }
+.st-combustible { color: var(--combustible) !important; }
+.st-frostbite { color: var(--frostbite) !important; }
+.st-exposure { color: var(--exposure) !important; }
+#log .shield { color: #b8d8ff; }
+
+.tokens { color: var(--gold); margin-left: 1ch; letter-spacing: 0; }

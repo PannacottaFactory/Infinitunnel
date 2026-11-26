@@ -15,6 +15,10 @@ G.BALANCE = {
   REWARD_CHOICES: 3,        // nombre de récompenses proposées après une victoire
   CORE_REWARD_CHANCE: 0.15, // chance qu'une carte soit un nouveau sort (sinon : modificateur)
   OFFER_UNIMPLEMENTED: false, // proposer aussi le contenu non encore codé (debug)
+  // Jetons de refresh : 1 jeton relance les 3 récompenses proposées.
+  REFRESH_START: 0,         // jetons au début de la partie
+  REFRESH_PER_VICTORY: 1,   // jetons gagnés à chaque combat gagné
+  REFRESH_ON_SKIP: 1,       // jetons gagnés en passant la récompense
 
   // --- Joueur -----------------------------------------------------------------
   PLAYER_HP: 100,         // PV max au départ
@@ -90,7 +94,26 @@ G.BALANCE = {
     // malédictions retombent à 0.
     CURSE_THRESHOLD: 10,
     CURSE_DAMAGE: 0.25,
+    // --- Statuts ajoutés à l'étape 4 ---
+    COMBUSTIBLE_PER_STACK: 0.20, // brûlures +20 % par cumul
+    CORROSION_PER_STACK: 0.05,   // poisons +5 % par cumul
+    CRACK_PER_STACK: 0.01,       // fêlure : chaque coup retire 1 % des PV actuels par cumul
+    FEAR_PER_STACK: 0.05,        // peur : 5 % par cumul de sauter son tour…
+    FEAR_MAX: 0.60,              // …plafonné à 60 %
+    FROSTBITE_THRESHOLD: 5,      // gelures nécessaires pour un gel automatique
+    OMEN_THRESHOLD: 3,           // présages nécessaires pour un coup ×5
+    OMEN_MULT: 5,
+    LINK_PER_STACK: 0.10,        // lien : l'ennemi subit 10 % des dégâts que tu subis
+    EXPOSURE_PER_STACK: 0.25,    // exposition : +25 % de dégâts critiques par cumul
   },
+
+  // --- Joueur : effets de survie et de risque (étape 4) ----------------------
+  SHIELD_AEGIS: 0.20,       // Égide : bouclier de 20 % des PV max (×bonus du sort)
+  SELF_BURN_PER_STACK: 0.03, // une brûlure sur toi : 3 % de tes PV max par tour
+  DODGE_MAX: 0.75,          // plafond des chances d'esquive / parade
+
+  // Les boucliers disparaissent au début de chaque tour : ils protègent de
+  // l'attaque du tour en cours et ne s'empilent pas indéfiniment.
 
   // --- Relances et sécurité ---------------------------------------------------
   MAX_RECASTS_PER_TURN: 50, // au-delà : « SURCHARGE »

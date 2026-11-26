@@ -32,12 +32,20 @@ G.UI.Rewards = (function () {
   }
 
   function showCards(ctx, rewards) {
+    const run = ctx.run;
+    const B = G.BALANCE;
     ctx.renderGrimoire({ mode: 'view', reorder: true });
+    const tokens = run.refresh;
     ctx.container.innerHTML =
-      `<div class="panel-title">VICTOIRE — choisis une récompense</div>` +
+      `<div class="panel-title">VICTOIRE — choisis une récompense ` +
+        `<span class="tokens" title="Jetons de refresh">⟳ ${tokens}</span></div>` +
       `<div class="cards">${rewards.map(cardHtml).join('')}</div>` +
-      `<div class="actions"><button data-skip>Passer (aucune récompense)</button>` +
-      `<span class="tip-dim">  Touches 1-3 pour choisir. Les ▲▼ du grimoire changent l'ordre des sorts.</span></div>`;
+      `<div class="actions">` +
+        `<button data-refresh${tokens > 0 ? '' : ' disabled'}>⟳ Refresh (−1 jeton) [R]</button>` +
+        `<button data-skip>Passer (+${B.REFRESH_ON_SKIP} jeton) [P]</button>` +
+        `<span class="tip-dim">Touches 1-3 pour choisir. +${B.REFRESH_PER_VICTORY} jeton par victoire. ` +
+        `Les ▲▼ du grimoire changent l'ordre des sorts.</span>` +
+      `</div>`;
 
     const choose = i => {
       const r = rewards[i];
@@ -45,9 +53,26 @@ G.UI.Rewards = (function () {
       if (r.kind === 'mod') placeMod(ctx, rewards, r.name);
       else placeCore(ctx, rewards, r.name);
     };
+    const refresh = () => {
+      const next = G.Run.refreshRewards(run, rewards);
+      if (!next) return;
+      if (ctx.onChange) ctx.onChange();
+      showCards(ctx, next);
+    };
+    const skip = () => {
+      G.Run.skipReward(run);
+      finish(ctx);
+    };
     ctx.container.querySelectorAll('[data-card]').forEach(el => { el.onclick = () => choose(+el.dataset.card); });
-    ctx.container.querySelector('[data-skip]').onclick = () => finish(ctx);
-    setKeys(e => { if (e.key >= '1' && e.key <= '9') choose(+e.key - 1); });
+    ctx.container.querySelector('[data-refresh]').onclick = refresh;
+    ctx.container.querySelector('[data-skip]').onclick = skip;
+    setKeys(e => {
+      // e.code : marche aussi en AZERTY, où la touche « 1 » donne « & ».
+      const digit = /^(?:Digit|Numpad)([1-9])$/.exec(e.code);
+      if (digit) choose(+digit[1] - 1);
+      else if (e.code === 'KeyR') refresh();
+      else if (e.code === 'KeyP') skip();
+    });
   }
 
   function placeMod(ctx, rewards, modName) {

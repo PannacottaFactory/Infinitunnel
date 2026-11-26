@@ -15,6 +15,11 @@ G.Run = (function () {
       grimoire: [G.Spells.create(B.STARTING_SPELL)],
       dead: false,
       lastResult: null,
+      refresh: G.BALANCE.REFRESH_START, // jetons pour relancer les récompenses
+      rewardRolls: 0,                   // tirages déjà faits à cet étage
+      // État persistant entre les combats (ennemis vaincus, statuts déjà
+      // appliqués, statuts transmis par Contamination, PV max de Festin…).
+      meta: { kills: 0, statusesSeen: {}, festin: 0, carry: null },
     };
   }
 
@@ -28,14 +33,20 @@ G.Run = (function () {
       player: run.player,
       floor: run.floor,
       rng: run.rng.fork('etage-' + run.floor),
+      meta: run.meta,
       snapshots: opts.snapshots,
     });
     run.lastResult = result;
 
     if (result.won) {
       run.floor++;
+      run.refresh += G.BALANCE.REFRESH_PER_VICTORY;
+      run.rewardRolls = 0;
       // PV max ×PLAYER_HP_GROWTH par étage ; puis soin entre deux combats.
-      const maxHp = Math.round(run.player.maxHp * B.PLAYER_HP_GROWTH);
+      // Festin : +5 % de PV max permanent par exemplaire et par ennemi vaincu.
+      const festin = Math.pow(1.05, run.meta.festin || 0);
+      run.meta.festin = 0;
+      const maxHp = Math.round(run.player.maxHp * B.PLAYER_HP_GROWTH * festin);
       const hp = result.player.hp + (maxHp - run.player.maxHp);
       run.player.maxHp = maxHp;
       run.player.hp = Math.min(maxHp, Math.round(hp + maxHp * B.HEAL_BETWEEN_FIGHTS));
@@ -61,14 +72,16 @@ G.Run = (function () {
 
   // Tire REWARD_CHOICES récompenses distinctes. Chaque carte a
   // CORE_REWARD_CHANCE d'être un nouveau sort, sinon c'est un modificateur.
-  // Le générateur est dérivé de la graine et de l'étage : même graine et mêmes
-  // choix, donc mêmes récompenses.
-  function rollRewards(run) {
+  // Le générateur est dérivé de la graine, de l'étage et du numéro de tirage :
+  // même graine et mêmes choix, donc mêmes récompenses.
+  // exclude : récompenses à ne pas reproposer (celles d'avant un refresh).
+  function rollRewards(run, exclude = []) {
     const B = G.BALANCE;
-    const rng = run.rng.fork('recompense-' + run.floor);
+    const rng = run.rng.fork('recompense-' + run.floor + '-' + run.rewardRolls);
+    run.rewardRolls++;
     const { mods, cores } = pools();
     const rewards = [];
-    const seen = new Set();
+    const seen = new Set(exclude.map(r => r.kind + ':' + r.name));
     let guard = 0;
     while (rewards.length < B.REWARD_CHOICES && guard++ < 200) {
       const isCore = cores.length && rng.chance(B.CORE_REWARD_CHANCE);
@@ -76,11 +89,25 @@ G.Run = (function () {
       if (!pool.length) continue;
       const name = rng.pick(pool);
       const key = (isCore ? 'core:' : 'mod:') + name;
+      if (seen.has(key) && guard > 150) { seen.delete(key); } // pool trop petit : on autorise les doublons de l'ancien tirage
       if (seen.has(key)) continue;
       seen.add(key);
       rewards.push({ kind: isCore ? 'core' : 'mod', name });
     }
     return rewards;
+  }
+
+  // Refresh : dépense 1 jeton pour tirer 3 nouvelles récompenses (différentes
+  // des précédentes). Renvoie null s'il n'y a plus de jeton.
+  function refreshRewards(run, current) {
+    if (run.refresh <= 0) return null;
+    run.refresh--;
+    return rollRewards(run, current);
+  }
+
+  // Passer la récompense rapporte des jetons de refresh.
+  function skipReward(run) {
+    run.refresh += G.BALANCE.REFRESH_ON_SKIP;
   }
 
   // --- Modifications du grimoire (validées ici, pas dans l'UI) -----------------
@@ -121,5 +148,5 @@ G.Run = (function () {
     return true;
   }
 
-  return { create, fight, rollRewards, placeMod, canAddSpell, addSpell, replaceCore, moveSpell };
+  return { create, fight, rollRewards, refreshRewards, skipReward, placeMod, canAddSpell, addSpell, replaceCore, moveSpell };
 })();

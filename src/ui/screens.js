@@ -42,6 +42,7 @@ G.UI.Screens = (function () {
     if (run) {
       parts.push(`ÉTAGE <b>${run.floor}</b>`);
       parts.push(`PV <b class="hp">${f(run.player.hp)}/${f(run.player.maxHp)}</b>`);
+      parts.push(`<span title="Jetons de refresh">⟳ <b>${run.refresh}</b></span>`);
     }
     parts.push(`RECORD <b>${rec.floor || '—'}</b>`);
     if (run) parts.push(`graine <span class="tip-dim">${esc(run.seed)}</span>`);

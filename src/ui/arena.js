@@ -13,7 +13,8 @@ G.UI.Arena = (function () {
   // Icône et ordre d'affichage des statuts (la couleur vient de la classe st-xxx).
   const ICONS = {
     burn: '♨', poison: '☣', bleed: '♦', freeze: '❄', shock: 'ϟ', fragile: '✕',
-    weak: '↓', numb: '≈', mark: '✚', curse: '✠',
+    weak: '↓', numb: '≈', mark: '✚', curse: '✠', ash: '∴', corrosion: '⊘', crack: '⌇',
+    combustible: '▲', fear: '!', frostbite: '✻', omen: '☉', link: '∞', exposure: '◎',
   };
 
   let root = null;

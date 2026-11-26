@@ -100,6 +100,7 @@
       run,
       container: $('reward-panel'),
       renderGrimoire,
+      onChange: () => Screens.statusBar(run),
       onDone: () => { setPhase('prep'); renderGrimoire(); },
     });
   }
