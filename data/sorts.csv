@@ -1,0 +1,33 @@
+Symbole,Sort,Effet de base,Notes
+?,Trait,Dégâts moyens sur 1 cible,Le sort le plus neutre
+?,Éclair,"Dégâts élevés, 25 % de chance de rater",
+?,Givre,"Dégâts faibles, 20 % de chance de geler",
+?,Miasme,"Aucun dégât direct, applique 2 poisons",
+?,Lame,"Dégâts faibles, frappe 2 fois",
+?,Orbe,"Dégâts faibles, ne rate jamais, +10 % par lancer dans le combat",
+?,Flamme,"Dégâts faibles, applique 2 brûlures",
+†,Épine,"Dégâts faibles, applique 1 saignement",
+?,Prisme,Dégâts aléatoires entre ×0 et ×3,
+?,Ombre,"Dégâts moyens, ×2 si l'ennemi a au moins un statut",
+?,Sangsue,"Dégâts faibles, te soigne de 50 % des dégâts infligés",
+?,Châtiment,Inflige 20 % des dégâts que tu as subis depuis le début du combat,
+?,Spirale,"Dégâts minuscules, frappe autant de fois que le numéro du tour",Devient énorme dans les longs combats
+?,Comète,"Dégâts énormes, te coûte 10 % de tes PV actuels",
+?,Égide,"Aucun dégât, te donne un bouclier",
+?,Étincelle,"Dégâts très faibles, frappe 3 fois",Idéal pour les effets appliqués à chaque coup
+?,Vide,"Aucun effet propre, ses modificateurs comptent ×1,5",
+?,Rayon,"Dégâts moyens, +20 % à chaque tour consécutif où il touche",
+?,Tempête,"Frappe 5 fois, chaque coup a 30 % de chance de rater",
+?,Brume,"Dégâts faibles, applique 2 engourdissements",
+?,Croix,"Dégâts moyens, applique 1 marque",
+?,Sceau,"Aucun dégât direct, applique 2 malédictions",
+?,Balance,Dégâts égaux à 10 % de l'écart de PV entre toi et l'ennemi,
+?,Pique,"Dégâts élevés, ses critiques font ×4",
+?,Trèfle,"Dégâts aléatoires, 25 % de chance de critique",
+?,Sablier,"Dégâts minuscules, doublés à chaque tour (1, 2, 4, 8…)",Croissance exponentielle dans un même combat
+?,Ancre,Dégâts égaux à 5 % de tes PV max,
+?,Reflet,Relance le dernier sort lancé à 60 % de sa puissance,Peut boucler avec un autre Reflet
+?,Saignée,Dégâts égaux à 30 % des PV que tu as perdus ce tour,
+?,Lune,"Dégâts moyens, ×3 si l'ennemi est gelé",
+?,Spore,"Aucun dégât direct, applique 1 poison et 1 faiblesse",
+?,Propagation,"Dégâts faibles, ajoute 1 cumul à chaque statut déjà présent sur l'ennemi",

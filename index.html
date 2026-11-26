@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grimoire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="crt" aria-hidden="true"></div>
+  <main id="app">
+    <header id="topbar">
+      <span class="logo">✦ G R I M O I R E ✦</span>
+      <span id="status"></span>
+    </header>
+
+    <!-- Écran titre -->
+    <section data-screen="start" hidden>
+      <div class="frame" data-title="NOUVELLE PARTIE">
+        <pre class="title-art">
+   ╔═╗ ╦═╗ ╦ ╔╦╗ ╔═╗ ╦ ╦═╗ ╔═╗
+   ║ ╦ ╠╦╝ ║ ║║║ ║ ║ ║ ╠╦╝ ║╣
+   ╚═╝ ╩╚═ ╩ ╩ ╩ ╚═╝ ╩ ╩╚═ ╚═╝</pre>
+        <p>Construis ton grimoire. Chaque sort est lancé <b>à chaque tour</b>, dans l'ordre.<br>
+          Les combats sont automatiques. Descends le plus bas possible.</p>
+        <p><label>Graine <span class="tip-dim">(vide = aléatoire)</span> <input id="seed" size="12"></label>
+          <button id="btn-start">Commencer ⏎</button></p>
+        <div id="start-record"></div>
+      </div>
+    </section>
+
+    <!-- Écran de jeu -->
+    <section data-screen="game" class="game" hidden>
+      <div class="col-left">
+        <div class="frame" data-title="ARÈNE"><div id="arena"></div></div>
+      </div>
+
+      <div class="col-right">
+        <div class="frame" data-title="GRIMOIRE"><div id="grimoire-panel"></div></div>
+        <div data-phase="combat" class="frame" data-title="JOURNAL" id="log-frame">
+          <div class="frame-controls speed">
+            vitesse
+            <button data-speed="1">×1</button><button data-speed="4">×4</button><button data-speed="instant" title="Instantané">»</button>
+          </div>
+          <pre id="log"></pre>
+          <div class="actions"><button id="btn-continue">Passer ⏎</button></div>
+        </div>
+
+        <div data-phase="reward" class="frame" data-title="RÉCOMPENSE"><div id="reward-panel"></div></div>
+
+        <div data-phase="prep" class="frame" data-title="PRÉPARATION">
+          <p>Réordonne tes sorts avec ▲▼ dans le grimoire : ils sont lancés de haut en bas, à chaque tour.</p>
+          <div class="actions"><button id="btn-fight">Combattre ⏎</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Écran de mort -->
+    <section data-screen="death" hidden>
+      <div class="frame" data-title="FIN DE PARTIE">
+        <div id="death-info"></div>
+        <div id="death-grimoire"></div>
+        <div class="actions">
+          <button id="btn-again">Nouvelle partie ⏎</button>
+          <button id="btn-replay">Rejouer la même graine</button>
+          <button id="btn-log">Revoir le dernier combat</button>
+        </div>
+        <pre id="death-log" hidden></pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- Ordre de chargement : données, constantes, moteur, UI. Pas de modules ES
+       (bloqués en file://) : chaque fichier ajoute son objet à window.G. -->
+  <script src="data/data.js"></script>
+  <script src="src/balance.js"></script>
+  <script src="src/rng.js"></script>
+  <script src="src/engine/statuses.js"></script>
+  <script src="src/engine/spells.js"></script>
+  <script src="src/engine/modifiers.js"></script>
+  <script src="src/engine/enemies.js"></script>
+  <script src="src/engine/combat.js"></script>
+  <script src="src/engine/run.js"></script>
+  <script src="src/ui/log.js"></script>
+  <script src="src/ui/arena.js"></script>
+  <script src="src/ui/playback.js"></script>
+  <script src="src/ui/grimoire.js"></script>
+  <script src="src/ui/rewards.js"></script>
+  <script src="src/ui/screens.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>
