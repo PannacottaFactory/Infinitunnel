@@ -30,7 +30,8 @@
     </section>
 
     <!-- Écran de jeu -->
-    <!-- Trois colonnes : grimoire (gauche) · arène (centre) · journal / récompense (droite) -->
+    <!-- Trois colonnes : grimoire (gauche) · arène + récompense (centre) · journal (droite).
+         Le journal reste visible pendant le choix des récompenses. -->
     <section data-screen="game" class="game" hidden>
       <div class="col-left">
         <div class="frame" data-title="GRIMOIRE"><div id="grimoire-panel"></div></div>
@@ -38,23 +39,23 @@
 
       <div class="col-center">
         <div class="frame" data-title="ARÈNE"><div id="arena"></div></div>
-      </div>
-
-      <div class="col-right">
-        <div data-phase="combat" class="frame" data-title="JOURNAL" id="log-frame">
-          <div class="frame-controls speed">
-            vitesse
-            <button data-speed="1">×1</button><button data-speed="4">×4</button><button data-speed="instant" title="Instantané">»</button>
-          </div>
-          <pre id="log"></pre>
-          <div class="actions"><button id="btn-continue">Passer ⏎</button></div>
-        </div>
 
         <div data-phase="reward" class="frame" data-title="RÉCOMPENSE"><div id="reward-panel"></div></div>
 
         <div data-phase="prep" class="frame" data-title="PRÉPARATION">
           <p>Réordonne tes sorts avec ▲▼ dans le grimoire : ils sont lancés de haut en bas, à chaque tour.</p>
           <div class="actions"><button id="btn-fight">Combattre ⏎</button></div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="frame" data-title="JOURNAL" id="log-frame">
+          <div class="frame-controls speed">
+            vitesse
+            <button data-speed="1">×1</button><button data-speed="4">×4</button><button data-speed="instant" title="Instantané">»</button>
+          </div>
+          <pre id="log"></pre>
+          <div class="actions" data-phase="combat"><button id="btn-continue">Passer ⏎</button></div>
         </div>
       </div>
     </section>

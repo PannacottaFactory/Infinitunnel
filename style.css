@@ -106,11 +106,20 @@ b { color: #fff; font-weight: normal; }
 section[data-screen] { flex: 1; min-height: 0; }
 .game {
   display: grid; gap: 0 1.5ch;
-  grid-template-columns: 34ch minmax(44ch, 1fr) minmax(58ch, 74ch);
+  grid-template-columns: 32ch minmax(44ch, 1fr) 62ch;
 }
 .col-left, .col-center, .col-right { min-height: 0; display: flex; flex-direction: column; }
-.col-left > .frame, .col-right > .frame[data-phase] { flex: 1; }
+.col-left > .frame, .col-right > .frame { flex: 1; }
 .col-center .frame-body { display: flex; flex-direction: column; }
+/* L'arène ne rétrécit jamais ; si la colonne déborde (petit écran), elle défile. */
+.col-center { overflow-y: auto; }
+.col-center > .frame { flex: none; }
+/* Écran peu haut : arène plus compacte */
+@media (max-height: 820px) {
+  .enemy-sym { font-size: 72px !important; }
+  .player-sym { font-size: 56px !important; }
+  #arena { gap: 2px; }
+}
 #log-frame .frame-body { display: flex; flex-direction: column; }
 #log {
   flex: 1; min-height: 240px; margin: 0; overflow-y: auto; white-space: pre;
@@ -281,9 +290,16 @@ body.flash-record #crt { animation: record-flash 1.4s ease-out; }
 
 /* --- Récompenses ----------------------------------------------------------------- */
 .panel-title { color: var(--title); letter-spacing: 1px; margin-bottom: 6px; }
-.cards { display: flex; gap: 1.5ch; flex-wrap: wrap; }
+/* Trois cartes de même taille : même largeur (grille) et même hauteur (ligne étirée) */
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 1.5ch; }
+/* Colonne étroite : les cartes s'empilent, toujours à taille égale (grid-auto-rows: 1fr) */
+#reward-panel { container-type: inline-size; }
+@container (max-width: 470px) {
+  .cards { grid-template-columns: 1fr; }
+  .card { min-height: 0; }
+}
 .card {
-  flex: 1 1 26ch; position: relative; cursor: pointer;
+  position: relative; cursor: pointer; min-height: 11em; display: flex; flex-direction: column;
   border: 1px solid var(--faint); background: #101016; padding: 6px 1.5ch 8px;
   transition: border-color .1s, transform .1s;
 }
