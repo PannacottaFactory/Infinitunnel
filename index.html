@@ -30,13 +30,17 @@
     </section>
 
     <!-- Écran de jeu -->
+    <!-- Trois colonnes : grimoire (gauche) · arène (centre) · journal / récompense (droite) -->
     <section data-screen="game" class="game" hidden>
       <div class="col-left">
+        <div class="frame" data-title="GRIMOIRE"><div id="grimoire-panel"></div></div>
+      </div>
+
+      <div class="col-center">
         <div class="frame" data-title="ARÈNE"><div id="arena"></div></div>
       </div>
 
       <div class="col-right">
-        <div class="frame" data-title="GRIMOIRE"><div id="grimoire-panel"></div></div>
         <div data-phase="combat" class="frame" data-title="JOURNAL" id="log-frame">
           <div class="frame-controls speed">
             vitesse

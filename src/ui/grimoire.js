@@ -72,37 +72,44 @@ G.UI.Grimoire = (function () {
         attrs += ` data-pick-slot="${si},${slot}"`;
       } else cls.push('forbidden');
     }
-    const label = name && G.Modifiers.isImplemented(name) ? G.Log.colorize(esc(name)) : esc(name || ' · ');
-    return `<span class="${cls.join(' ')}"${attrs}>[${label}]</span>`;
+    const label = name && G.Modifiers.isImplemented(name) ? G.Log.colorize(esc(name)) : esc(name || '· vide ·');
+    const branch = slot === spell.slots.length - 1 ? '└ ' : '├ ';
+    return `<div class="slot-line"><span class="branch">${branch}</span>` +
+      `<span class="${cls.join(' ')}"${attrs}>${label}</span></div>`;
   }
 
+  // Un sort = un bloc vertical :
+  //   I.  ✦ Trait        ▲▼
+  //       ├ Brûlure
+  //       ├ Brûlure
+  //       └ Si brûle → ×2
   function render(container, run, opts = {}) {
     initTooltip();
     const B = G.BALANCE;
     const g = run.grimoire;
-    const width = Math.max(...g.map(s => s.core.length)) + 2;
 
-    const rows = g.map((spell, si) => {
-      const num = (G.Log.roman(si + 1) + '.').padEnd(5, ' ');
+    const blocks = g.map((spell, si) => {
+      const num = (G.Log.roman(si + 1) + '.').padEnd(4, ' ');
       const coreCls = ['core'];
       let coreAttrs = ` data-tip="${esc(coreTip(spell.core))}"`;
       if (!G.Spells.isImplemented(spell.core)) coreCls.push('unimpl');
       if (opts.mode === 'replaceCore') { coreCls.push('pickable'); coreAttrs += ` data-pick-core="${si}"`; }
-      const coreLabel = (G.Spells.symbol(spell.core) + ' ' + spell.core).padEnd(width + 2, ' ');
-      const slots = spell.slots.map((_, k) => slotHtml(spell, si, k, opts)).join(' ');
       const move = opts.onMove
-        ? ` <span class="move">` +
+        ? `<span class="move">` +
           `<button data-move="${si},-1"${si === 0 ? ' disabled' : ''} title="Monter">▲</button>` +
           `<button data-move="${si},1"${si === g.length - 1 ? ' disabled' : ''} title="Descendre">▼</button></span>`
         : '';
-      return `<div class="spell-row"><span class="num">${num}</span>` +
-        `<span class="${coreCls.join(' ')}"${coreAttrs}>${esc(coreLabel)}</span>${slots}${move}</div>`;
+      const slots = spell.slots.map((_, k) => slotHtml(spell, si, k, opts)).join('');
+      return `<div class="spell-block">` +
+        `<div class="spell-head"><span class="num">${num}</span>` +
+        `<span class="${coreCls.join(' ')}"${coreAttrs}><span class="core-sym">${esc(G.Spells.symbol(spell.core))}</span> ${esc(spell.core)}</span>${move}</div>` +
+        `<div class="spell-slots">${slots}</div></div>`;
     });
     for (let i = g.length; i < B.MAX_SPELLS; i++) {
-      rows.push(`<div class="spell-row free"><span class="num">${(G.Log.roman(i + 1) + '.').padEnd(5, ' ')}</span>— emplacement libre —</div>`);
+      blocks.push(`<div class="spell-block free"><span class="num">${(G.Log.roman(i + 1) + '.').padEnd(4, ' ')}</span>— libre —</div>`);
     }
 
-    container.innerHTML = rows.join("");
+    container.innerHTML = blocks.join('');
 
     container.querySelectorAll('[data-pick-slot]').forEach(el => {
       el.onclick = () => { const [s, k] = el.dataset.pickSlot.split(',').map(Number); opts.onSlot(s, k); };

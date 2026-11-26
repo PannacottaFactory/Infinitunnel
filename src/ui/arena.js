@@ -8,7 +8,7 @@ G.UI = G.UI || {};
 G.UI.Arena = (function () {
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const f = n => G.Log.formatNumber(n);
-  const BAR = 22; // largeur des barres, en caractères
+  const BAR = 34; // largeur des barres, en caractères (affichées en grand)
 
   // Icône et ordre d'affichage des statuts (la couleur vient de la classe st-xxx).
   const ICONS = {
@@ -29,7 +29,7 @@ G.UI.Arena = (function () {
 
   function statusesHtml(st) {
     const ids = Object.keys(st || {});
-    if (!ids.length) return '<span class="tip-dim">aucun statut</span>';
+    if (!ids.length) return '<span class="no-status">aucun statut</span>';
     return ids.map(id => {
       const d = G.Statuses.DEFS[id];
       const label = d ? d.name : id;
@@ -43,20 +43,22 @@ G.UI.Arena = (function () {
   function setup(el, startEv) {
     root = el;
     enemyInfo = startEv.enemy;
+    // L'ennemi en haut, toi en bas, face à face au centre de l'écran.
     root.innerHTML =
-      `<div class="enemy-box">` +
+      `<div class="fighter enemy-box">` +
+        `<div id="ar-pops" class="pops"></div>` +
         `<div class="enemy-sym" id="ar-sym">${esc(enemyInfo.symbol)}</div>` +
-        `<div class="enemy-name">${esc(enemyInfo.name)}</div>` +
-        `<div class="tip-dim">étage ${startEv.floor} · ATK ${f(enemyInfo.atk)}</div>` +
-        `<div class="hp-line">PV <span id="ar-ehp"></span></div>` +
+        `<div class="fighter-name enemy-name">${esc(enemyInfo.name)}</div>` +
+        `<div class="fighter-sub">étage ${startEv.floor} · ATK ${f(enemyInfo.atk)}</div>` +
+        `<div class="hp-line" id="ar-ehp"></div>` +
         `<div class="hp-num" id="ar-ehp-n"></div>` +
         `<div id="ar-st" class="statuses"></div>` +
-        `<div id="ar-pops" class="pops"></div>` +
       `</div>` +
-      `<div class="arena-sep">─────────── ⚔ ───────────</div>` +
-      `<div class="player-box" id="ar-player">` +
-        `<div><span class="player-sym">@</span> Toi <span class="tip-dim" id="ar-turn"></span></div>` +
-        `<div class="hp-line">PV <span id="ar-php"></span></div>` +
+      `<div class="arena-sep">───────────── ⚔ <span id="ar-turn"></span> ⚔ ─────────────</div>` +
+      `<div class="fighter player-box" id="ar-player">` +
+        `<div class="player-sym" id="ar-psym">@</div>` +
+        `<div class="fighter-name player-name">Toi</div>` +
+        `<div class="hp-line" id="ar-php"></div>` +
         `<div class="hp-num" id="ar-php-n"></div>` +
       `</div>`;
     update({
@@ -75,7 +77,7 @@ G.UI.Arena = (function () {
     $('ar-php').innerHTML = bar(s.pHp, s.pMax, 'bar-player' + low);
     $('ar-php-n').innerHTML = f(s.pHp) + ' / ' + f(s.pMax) +
       (s.shield > 0 ? ` <span class="shield">⛨ ${f(s.shield)}</span>` : '');
-    $('ar-turn').textContent = s.turn ? '· tour ' + s.turn : '';
+    $('ar-turn').textContent = s.turn ? 'TOUR ' + s.turn : 'PRÊT';
   }
 
   // Relance une animation CSS même si la classe est déjà présente.
